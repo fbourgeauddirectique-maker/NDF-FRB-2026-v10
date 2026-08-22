@@ -1,27 +1,271 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="light">
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>RH-FRB · Frais & Pointage</title>
-<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#01696f" />
+  <meta name="description" content="PWA Notes Frais Pro pour suivre frais, forfaits, avances et gains en local." />
+  <title>Notes Frais Pro V1.1</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-<div class="app-shell">
-<header class="topbar">
-<div class="brand"><div class="brand-mark" aria-hidden="true">≡</div><div><div class="eyebrow">RH-FRB</div><h1>Frais & Pointage</h1></div></div>
-<div class="topbar-actions"><span id="auth-status" class="eyebrow">Non connecté</span><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Basculer le thème">☾</button></div>
-</header>
-<main class="main-layout">
-<aside class="sidebar"><nav class="nav-grid" aria-label="Navigation"><button class="nav-button active" data-view="dashboard">Tableau de bord</button><button class="nav-button" data-view="pointage">Pointage</button><button class="nav-button" data-view="historique">Historique</button><button class="nav-button" data-view="semaine">Semaine</button><button class="nav-button" data-view="mois">Mois</button><button class="nav-button" data-view="frais">Notes de frais</button><button class="nav-button" data-view="avances">Avances</button><button class="nav-button" data-view="parametres">Paramètres</button></nav></aside>
-<section class="content-area">
-<section class="screen active" id="view-dashboard"><div class="hero-card"><div><div class="eyebrow">Semaine courante</div><h2 id="dashboard-week">Semaine en cours</h2><p class="muted">Suivi des heures, frais et avance.</p></div><div class="inline-actions"><button class="button primary" data-view-link="pointage">Pointer</button><button class="button ghost" data-view-link="frais">Ajouter un frais</button></div></div><div class="kpi-grid"><article class="kpi-card"><span class="label">Heures semaine</span><strong class="value" id="kpi-hours">00h 00</strong></article><article class="kpi-card"><span class="label">Jours pointés</span><strong class="value" id="kpi-days">0</strong></article><article class="kpi-card"><span class="label">Frais</span><strong class="value" id="kpi-expenses">0,00 €</strong></article><article class="kpi-card"><span class="label">Reste avance</span><strong class="value" id="kpi-remaining">0,00 €</strong></article></div><article class="panel"><div class="panel-title-row"><div><h3>Pointages récents</h3><p class="muted">Votre activité de la semaine.</p></div></div><div class="list" id="dashboard-entries"></div></article></section>
-<section class="screen" id="view-pointage"><div class="section-header"><div><div class="eyebrow">Relevé d’heures</div><h2>Pointage</h2><p class="muted">Saisissez les horaires et le contexte de la journée.</p></div><div class="inline-actions"><input id="pointage-date" type="date"><button class="button primary" id="save-pointage" type="button">Enregistrer</button></div></div><article class="panel"><div class="kpi-grid"><article class="kpi-card"><span class="label">Total du jour</span><strong class="value" id="pointage-total">00:00</strong></article><article class="kpi-card"><span class="label">Statut</span><strong class="value" id="pointage-status">En attente</strong></article></div><fieldset class="fieldset form-grid"><legend>Horaires</legend><label>Début matin<input id="morning-start" type="time"></label><label>Fin matin<input id="morning-end" type="time"></label><label>Début AM<input id="afternoon-start" type="time"></label><label>Fin journée<input id="day-end" type="time"></label></fieldset><fieldset class="fieldset form-grid"><legend>Informations</legend><label>Mission<input id="pointage-mission" type="text"></label><label>Zone<input id="pointage-zone" type="text"></label><label>Équipe<input id="pointage-team" type="text"></label><label>Voiture<input id="pointage-car" type="text"></label><label>Affectation<input id="pointage-assignment" type="text"></label></fieldset></article></section>
-<section class="screen" id="view-historique"><div class="section-header"><div><div class="eyebrow">Historique</div><h2>Historique du pointage</h2><p class="muted">Horaires et contexte des journées.</p></div></div><div class="list" id="timesheet-history"></div></section>
-<section class="screen" id="view-semaine"><div class="section-header"><div><div class="eyebrow">Vue hebdomadaire</div><h2>Semaine</h2></div></div><article class="panel"><div class="kpi-grid"><article class="kpi-card"><span class="label">Total semaine</span><strong class="value" id="week-hours">00:00</strong></article></div><p class="muted" id="week-range"></p><div class="calendar-grid" id="week-calendar"></div></article></section>
-<section class="screen" id="view-mois"><div class="section-header"><div><div class="eyebrow">Vue mensuelle</div><h2>Mois</h2></div><input id="month-picker" class="month-picker" type="month"></div><article class="panel"><p class="muted" id="month-summary"></p><div class="list" id="month-list"></div></article></section>
-<section class="screen" id="view-frais"><div class="section-header"><div><div class="eyebrow">Dépenses</div><h2>Notes de frais</h2><p class="muted">Données conservées dans votre espace utilisateur.</p></div><strong id="expense-total">0,00 €</strong></div><article class="panel"><form id="expense-form" class="form-grid"><label>Date<input id="expense-date" type="date" required></label><label>Catégorie<select id="expense-category"><option>Repas</option><option>Transport</option><option>Hôtel</option><option>Carburant</option><option>Parking</option><option>Autre</option></select></label><label>Montant<input id="expense-amount" type="number" min="0" step="0.01" required></label><label>Description<input id="expense-description" type="text" required></label><label>Justificatif<input id="expense-receipt" type="file" accept="image/*,.pdf"></label><button class="button primary" type="submit">Enregistrer la note de frais</button></form></article><div class="list" id="expense-list"></div></section>
-<section class="screen" id="view-avances"><div class="section-header"><div><div class="eyebrow">Gestion financière</div><h2>Avances</h2></div></div><article class="panel"><div class="form-grid"><label>Avance hebdomadaire<input id="weekly-advance" type="number" min="0" step="0.01" value="0"></label><label>Objectif hebdomadaire (minutes)<input id="weekly-target" type="number" min="0" value="2100"></label></div></article></section>
-<section class="screen" id="view-parametres"><div class="section-header"><div><div class="eyebrow">Configuration</div><h2>Paramètres</h2><p class="muted">Les informations de pointage sont visibles dans Pointage et Historique.</p></div></div><article class="panel"><p class="muted">Les forfaits, avances et paramètres historiques restent gérés par l’application de notes de frais existante.</p></article></section>
-</section></main></div><div id="toast" class="toast" role="status"></div><script type="module" src="app.js"></script></body></html>
+  <a class="skip-link" href="#main-content">Aller au contenu</a>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-label="Logo Notes Frais Pro">
+          <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+            <rect x="10" y="8" width="44" height="48" rx="12" fill="none" stroke="currentColor" stroke-width="4"></rect>
+            <path d="M22 24h20M22 34h20M22 44h12" stroke="currentColor" stroke-width="4" stroke-linecap="round"></path>
+            <circle cx="46" cy="44" r="6" fill="currentColor"></circle>
+          </svg>
+        </div>
+        <div>
+          <p class="eyebrow">PWA hors ligne</p>
+          <h1>Notes Frais Pro</h1>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="install-button" class="button ghost hidden" type="button">Installer</button>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Basculer le thème"></button>
+      </div>
+    </header>
+
+    <main id="main-content" class="main-layout">
+      <aside class="sidebar" aria-label="Navigation principale">
+        <nav class="nav-grid">
+          <button class="nav-button active" data-screen="home" type="button">Accueil</button>
+          <button class="nav-button" data-screen="day" type="button">Jour</button>
+          <button class="nav-button" data-screen="week" type="button">Semaine</button>
+          <button class="nav-button" data-screen="month" type="button">Mois</button>
+          <button class="nav-button" data-screen="year" type="button">Année</button>
+          <button class="nav-button" data-screen="advances" type="button">Avances</button>
+          <button class="nav-button" data-screen="settings" type="button">Paramètres</button>
+          <button class="nav-button" data-screen="export" type="button">Export CSV</button>
+        </nav>
+      </aside>
+
+      <section class="content-area">
+        <section class="screen active" id="screen-home">
+          <div class="hero-card">
+            <div>
+              <p class="eyebrow">Semaine courante</p>
+              <h2>Vue rapide</h2>
+              <p>Suivi de l’avance, des forfaits acquis, des gains et du reste disponible.</p>
+            </div>
+            <button class="button primary" type="button" data-go-screen="day">Saisir aujourd’hui</button>
+          </div>
+
+          <div class="kpi-grid" id="home-summary"></div>
+        </section>
+
+        <section class="screen" id="screen-day">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Saisie journalière</p>
+              <h2>Jour</h2>
+            </div>
+            <div class="inline-actions">
+              <button class="button ghost" id="copy-previous-day" type="button">Copier la veille</button>
+              <button class="button primary" id="save-day" type="button">Enregistrer</button>
+            </div>
+          </div>
+
+          <form id="day-form" class="panel form-grid">
+            <label>
+              <span>Date</span>
+              <input type="date" id="day-date" required />
+            </label>
+
+            <fieldset class="fieldset">
+              <legend>Repas midi</legend>
+              <label class="switch-row"><input type="checkbox" id="lunch-enabled" /> <span>Activé</span></label>
+              <label>
+                <span>Dépense réelle</span>
+                <input type="number" id="lunch-amount" min="0" step="0.01" inputmode="decimal" />
+              </label>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend>Repas soir</legend>
+              <label class="switch-row"><input type="checkbox" id="dinner-enabled" /> <span>Activé</span></label>
+              <label>
+                <span>Dépense réelle</span>
+                <input type="number" id="dinner-amount" min="0" step="0.01" inputmode="decimal" />
+              </label>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend>Hôtel</legend>
+              <label>
+                <span>Type</span>
+                <select id="hotel-type">
+                  <option value="none">Aucun</option>
+                  <option value="low">Basse saison</option>
+                  <option value="high">Haute saison</option>
+                </select>
+              </label>
+              <label>
+                <span>Dépense réelle hôtel</span>
+                <input type="number" id="hotel-amount" min="0" step="0.01" inputmode="decimal" />
+              </label>
+            </fieldset>
+
+            <label>
+              <span>Hôtel hors forfait</span>
+              <input type="number" id="hotel-extra" min="0" step="0.01" inputmode="decimal" />
+            </label>
+
+            <label>
+              <span>Dépenses diverses hors forfait</span>
+              <input type="number" id="misc-extra" min="0" step="0.01" inputmode="decimal" />
+            </label>
+          </form>
+
+          <div class="kpi-grid" id="day-summary"></div>
+        </section>
+
+        <section class="screen" id="screen-week">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Vue hebdomadaire</p>
+              <h2>Semaine</h2>
+            </div>
+          </div>
+          <div class="kpi-grid" id="week-summary"></div>
+          <div class="panel">
+            <div class="panel-title-row">
+              <h3>Journées</h3>
+              <span id="week-label"></span>
+            </div>
+            <div id="week-days-list" class="list"></div>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-month">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Vue mensuelle</p>
+              <h2>Mois</h2>
+            </div>
+            <label class="month-picker">
+              <span>Mois</span>
+              <input type="month" id="month-picker" />
+            </label>
+          </div>
+          <div class="kpi-grid" id="month-summary"></div>
+          <div class="panel">
+            <div class="panel-title-row">
+              <h3>Calendrier</h3>
+              <span id="month-label"></span>
+            </div>
+            <div id="month-calendar" class="calendar-grid"></div>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-year">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Vue annuelle</p>
+              <h2>Année</h2>
+            </div>
+            <label>
+              <span>Année</span>
+              <input type="number" id="year-picker" min="2020" max="2100" step="1" />
+            </label>
+          </div>
+          <div class="kpi-grid" id="year-summary"></div>
+          <div class="panel split-panel" id="year-breakdown"></div>
+        </section>
+
+        <section class="screen" id="screen-advances">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Gestion hebdomadaire</p>
+              <h2>Avances</h2>
+            </div>
+            <button class="button primary" id="save-advance" type="button">Enregistrer l’avance</button>
+          </div>
+
+          <form class="panel compact-form" id="advance-form">
+            <label>
+              <span>Année</span>
+              <input type="number" id="advance-year" min="2020" max="2100" step="1" required />
+            </label>
+            <label>
+              <span>Semaine ISO</span>
+              <input type="number" id="advance-week" min="1" max="53" step="1" required />
+            </label>
+            <label>
+              <span>Avance</span>
+              <input type="number" id="advance-amount" min="0" step="0.01" inputmode="decimal" required />
+            </label>
+          </form>
+
+          <div class="panel">
+            <div class="panel-title-row">
+              <h3>Historique</h3>
+            </div>
+            <div id="advance-list" class="list"></div>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-settings">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Montants modifiables</p>
+              <h2>Paramètres</h2>
+            </div>
+            <button class="button primary" id="save-settings" type="button">Sauvegarder</button>
+          </div>
+
+          <form class="panel compact-form" id="settings-form">
+            <label>
+              <span>Forfait midi</span>
+              <input type="number" id="setting-lunch" min="0" step="0.01" inputmode="decimal" />
+            </label>
+            <label>
+              <span>Forfait soir</span>
+              <input type="number" id="setting-dinner" min="0" step="0.01" inputmode="decimal" />
+            </label>
+            <label>
+              <span>Hôtel basse saison</span>
+              <input type="number" id="setting-hotel-low" min="0" step="0.01" inputmode="decimal" />
+            </label>
+            <label>
+              <span>Hôtel haute saison</span>
+              <input type="number" id="setting-hotel-high" min="0" step="0.01" inputmode="decimal" />
+            </label>
+          </form>
+        </section>
+
+        <section class="screen" id="screen-export">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Extraction des données</p>
+              <h2>Export CSV</h2>
+            </div>
+            <button class="button primary" id="export-csv" type="button">Télécharger le CSV</button>
+          </div>
+          <div class="panel">
+            <p>Le fichier exporte les colonnes prévues : Date, Midi activé, Dépense midi, Soir activé, Dépense soir, Type hôtel, Dépense hôtel, Hôtel hors forfait, Dépenses diverses, Forfaits, Dépenses forfaitaires et Gain.</p>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="./db.js" defer></script>
+  <script src="./export.js" defer></script>
+  <script src="./app.js" defer></script>
+</body>
+</html>
